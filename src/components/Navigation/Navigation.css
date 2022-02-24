@@ -1,0 +1,42 @@
+.nav {
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid red; */
+  margin-right: 70px;
+}
+
+.nav__list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.nav__link {
+  margin-right: 30px;
+  cursor: pointer;
+}
+.nav__link:hover {
+  opacity: 0.7;
+}
+
+.nav__item {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.nav__button {
+  width: 76px;
+  height: 32px;
+  border: none;
+  background-color: #3DDC84;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.nav__button:hover {
+  opacity: 0.7;
+}
