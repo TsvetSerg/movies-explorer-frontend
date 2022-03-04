@@ -7,6 +7,7 @@ function Movies() {
     <section className='movies__containers'>
       <SearchForm/>
       <MoviesCardList/>
+      <button className='movies__more'>Еще</button>
     </section>
   )
 }
