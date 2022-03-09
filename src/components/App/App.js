@@ -6,7 +6,9 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import Movies from '../Movies/Movies';
+import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { Route, Switch } from 'react-router-dom';
+import { savedMovie } from '../../utils/movieData';
 
 function App() {
 
@@ -22,6 +24,12 @@ function App() {
         <Route path="/movies">
           <Header/>
           <Movies/>
+          <Footer/>
+        </Route>
+
+        <Route path="/saved-movies">
+          <Header/>
+          <MoviesCardList dataMovie={savedMovie}/>
           <Footer/>
         </Route>
 

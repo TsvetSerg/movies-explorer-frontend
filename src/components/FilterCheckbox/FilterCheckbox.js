@@ -1,13 +1,14 @@
 import './FilterCheckbox.css'
 
-function FilterCheckbox() {
+function FilterCheckbox({durationFilter, checked}) {
   return (
-    <form className='checkbox'>
-      <label className='checkbox__lable' for='checkbox'>
-        <input className='checkbox__input' id='checkbox' name='checkbox' type="checkbox" />
-        Короткометражки
+    <div className='checkbox'>
+      <label className='checkbox__lable'>
+        <input type='checkbox'/>
+        <span className='checkbox__slider round'></span>
       </label>
-    </form>
+      <p className='checkbox__title'>Короткометражки</p>
+    </div>
   )
 }
 

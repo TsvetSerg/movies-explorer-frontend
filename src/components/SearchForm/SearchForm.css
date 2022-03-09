@@ -19,7 +19,7 @@
 
 .searchForm__input {
   height: 22px;
-  min-width: 830px;
+  min-width: 800px;
   border: none;
   background-color: transparent;
   background-image: url(../../images/searchimg.svg);
@@ -45,6 +45,7 @@
   align-items: center;
   justify-content: center;
   border-right: 1px solid #505050;
+  margin-right: 19px;
 }
 
 .searchForm__image {
