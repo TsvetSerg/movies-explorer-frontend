@@ -54,6 +54,7 @@
   border: none;
   background-color: #4285F4;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .login__subtitle {

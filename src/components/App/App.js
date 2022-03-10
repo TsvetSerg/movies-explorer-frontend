@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
@@ -9,8 +10,17 @@ import Movies from '../Movies/Movies';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { Route, Switch } from 'react-router-dom';
 import { savedMovie } from '../../utils/movieData';
+import Profile from '../Profile/Profile';
+import EditProfile from '../EditProfile/EditProfile';
+import SearchForm from '../SearchForm/SearchForm';
 
 function App() {
+
+  const [isLogin, setLogin] = React.useState(false)
+
+  function handelLogin() {
+    setLogin(true)
+  }
 
   return (
     <div className="page__container">
@@ -22,15 +32,31 @@ function App() {
         </Route>
 
         <Route path="/movies">
-          <Header/>
+          <Header
+           isLogin={handelLogin}
+           />
           <Movies/>
           <Footer/>
         </Route>
 
         <Route path="/saved-movies">
-          <Header/>
+          <Header
+           isLogin={handelLogin}
+           />
+          <SearchForm/>
           <MoviesCardList dataMovie={savedMovie}/>
           <Footer/>
+        </Route>
+
+        <Route path="/profile">
+          <Header
+           isLogin={handelLogin}
+           />
+          <Profile/>
+        </Route>
+
+        <Route path="/edit-profile">
+          <EditProfile/>
         </Route>
 
         <Route path="/signin">
