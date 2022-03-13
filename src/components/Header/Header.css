@@ -1,5 +1,6 @@
 .header {
   width: 100%;
+  width: calc(100% - 70px * 2);
   display: flex;
   flex-direction: row;
   /* border: 1px solid red; */
@@ -11,6 +12,19 @@
 .header__logo {
   max-width: 38px;
   max-height: 38px;
-  margin-left: 70px;
+  /* margin-left: 70px; */
   cursor: pointer;
 }
+
+@media screen and (max-width: 1200px) {
+  .header {
+    width: calc(100% - 30px * 2);
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .header {
+    width: calc(100% - 14px * 2);
+  }
+}
+

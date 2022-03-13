@@ -1,5 +1,6 @@
 .main__container {
   /* border: 1px black solid; */
+  width: 100%;
 }
 
 .main__title {
@@ -11,4 +12,20 @@
   letter-spacing: -0.04em;
   padding-bottom: 23px;
   border-bottom: 1px solid #DADADA;
+  width: 100%;
+
+}
+
+.techs .main__title {
+  width: 100%;
+}
+
+@media screen and (max-width: 550px) {
+  .main__title {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .techs .main__title {
+    border-bottom: 1px solid #000000;
+  }
 }

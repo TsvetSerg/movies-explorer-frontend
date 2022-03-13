@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   /* border: 1px solid red; */
-  margin-right: 70px;
+  /* margin-right: 70px; */
 }
 
 .nav__list {
@@ -74,3 +74,13 @@
   background-position: center center;
 }
 
+@media screen and (max-width: 550px) {
+  .nav__button {
+    width: 54px;
+    height: 26px;
+  }
+  .nav__item {
+    font-size: 10px;
+  }
+
+}

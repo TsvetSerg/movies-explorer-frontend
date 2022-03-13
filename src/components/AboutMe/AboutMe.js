@@ -7,6 +7,7 @@ function AboutMe() {
       <a name='about-me'></a>
       <h3 className='main__title'>Студент</h3>
       <div className='about-me__info'>
+        <img src={img} alt="Фото автора" className='about-me__images' />
         <div className='about-me__container'>
           <h2 className='about-me__name'>Виталий</h2>
           <p className='about-me__about'>Фронтенд-разработчик, 30 лет</p>
@@ -17,9 +18,9 @@ function AboutMe() {
             <li className='social__link'>Github</li>
           </ul>
         </div>
-        <div>
+        {/* <div>
           <img src={img} alt="Фото автора" className='about-me__images' />
-        </div>
+        </div> */}
       </div>
 
     </section>
