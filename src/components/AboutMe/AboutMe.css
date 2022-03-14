@@ -16,6 +16,7 @@
 
 .about-me__info {
   display: flex;
+  flex-direction: row-reverse;
   margin-top: 66px;
 }
 

@@ -6,10 +6,13 @@ function SearchForm() {
   return (
     <section className='searchForm'>
       <form className='searchForm__form'>
+        <div className='searchForm__wrapper'>
         <input className='searchForm__input' type="text" id="search" name="search" placeholder='Фильм' />
         <button className='searchForm__button'><img className='searchForm__image' src={image} alt="Кнопка поиска" /></button>
+        </div>
         <FilterCheckbox/>
       </form>
+
     </section>
   )
 }

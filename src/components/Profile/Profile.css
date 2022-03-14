@@ -3,6 +3,7 @@
   flex-direction: column;
   width: 410px;
   margin-top: 74px;
+  height: 100%;
 }
 
 .profile__title {
@@ -66,4 +67,38 @@
   text-decoration: none;
   color: #EE3465;
   margin-top: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .profile__title {
+    margin-bottom: 96px;
+  }
+
+  .profile__area:nth-child(3) {
+  margin-bottom: 210px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .profile {
+    margin-top: 70px;
+    width: 260px;
+    align-content: space-between;
+  }
+  .profile__title {
+    margin-bottom: 80px;
+  }
+  .profile__edit {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .profile__loguot {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .profile__area:nth-child(3) {
+    padding-bottom: 0;
+    margin-bottom: 379px;
+    border-bottom: none;
+  }
 }

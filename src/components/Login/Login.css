@@ -1,12 +1,12 @@
-.login {
+.auth {
   display: flex;
   flex-direction: column;
   justify-self: center;
   margin-top: 70px;
-  min-width: 396px;
+  width: 396px;
 }
 
-.login__title {
+.auth__title {
   margin-top: 40px;
   margin-bottom: 40px;
   font-weight: 500;
@@ -14,12 +14,13 @@
   line-height: 29px;
 }
 
-.login__form {
+.auth__form {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
-.login__input-title {
+.auth__input-title {
   margin: 0;
   padding: 0;
   font-weight: normal;
@@ -29,7 +30,7 @@
   margin-bottom: 10px;
 }
 
-.login__input {
+.auth__input {
   margin: 0;
   padding: 0;
   margin-bottom: 20px;
@@ -41,11 +42,11 @@
   padding-left: 15px;
 }
 
-.login__input:last-of-type {
+.auth__input:last-of-type {
   margin-bottom: 179px;
 }
 
-.login__button {
+.auth__button {
   margin: 0;
   padding: 0;
   height: 45px;
@@ -55,9 +56,11 @@
   background-color: #4285F4;
   border-radius: 3px;
   cursor: pointer;
+  font-size: 14px;
+  line-height: 17px;
 }
 
-.login__subtitle {
+.auth__subtitle {
   margin: 0;
   padding: 0;
   font-weight: normal;
@@ -67,7 +70,7 @@
   color: #8B8B8B;
 }
 
-.login__link {
+.auth__link {
   text-decoration: none;
   margin: 0;
   padding: 0;
@@ -77,4 +80,37 @@
   text-align: center;
   color: #4285F4;
   margin-left: 6px;
+}
+
+@media screen and (max-width: 450px) {
+  .auth {
+    width: 260px;
+    align-items: center;
+
+  }
+
+  .auth__title {
+    margin-bottom: 80px;
+    margin-top: 50px;
+    text-align: center;
+  }
+
+  .auth__button {
+    font-size: 12px;
+    line-height: 15px;
+    margin-bottom: 14px;
+  }
+
+  .auth__subtitle {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .auth__link {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .auth__input:last-of-type {
+    margin-bottom: 267px;
+  }
 }

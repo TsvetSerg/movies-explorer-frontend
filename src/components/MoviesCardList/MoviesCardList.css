@@ -1,6 +1,7 @@
 .movies-list {
+  /* width: calc(100% - 30px * 2); */
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 270px);
   gap: 38px 20px;
   margin-top: 70px;
   margin-bottom: 10px;
@@ -14,14 +15,21 @@
 
 @media screen and (max-width: 900px) {
   .movies-list {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 339px);
     gap: 30px 30px;
   }
 }
 
-@media screen and (max-width: 590px) {
+@media screen and (max-width: 738px) {
   .movies-list {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 270px);
+    gap: 34px 10px;
+  }
+}
+
+@media screen and (max-width: 625px) {
+  .movies-list {
+    grid-template-columns: repeat(1, 300px);
     gap: 34px 10px;
   }
 }

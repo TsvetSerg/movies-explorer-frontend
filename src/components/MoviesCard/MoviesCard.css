@@ -1,7 +1,7 @@
 .movie {
   /* border: 1px solid red; */
-  max-width: 270px;
-  max-height: 230px;
+  min-width: 270px;
+  min-height: 230px;
   display: flex;
   flex-direction: column;
 }
