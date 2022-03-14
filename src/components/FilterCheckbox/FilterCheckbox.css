@@ -83,8 +83,7 @@ input:checked+.checkbox__slider:before {
     margin: 0;
     padding: 0;
     position: absolute;
-    margin-top: 45px;
-    top: 73px;
+    margin-top: 180px;
   }
   .checkbox__title {
     font-size: 11px;

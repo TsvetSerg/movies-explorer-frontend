@@ -67,7 +67,7 @@
 @media screen and (max-width: 800px) {
   .searchForm {
     width: calc(100% - 30px * 2);
-    position: relative;
+    /* position: relative; */
   }
 }
 
