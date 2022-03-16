@@ -1,11 +1,15 @@
 import React from 'react';
 import './Navigation.css';
 import { Link } from 'react-router-dom';
-import img from '../../images/burggger.svg'
+import CloseBtn from '../../images/icon-close-btn.svg'
 
 function Navigation({isLogin}) {
 
   const [isBurgerMenu, setBurgerMenu] = React.useState(false);
+
+  function closeBurgerMenu() {
+    setBurgerMenu(false)
+  }
 
   function handelBurgerMenu() {
     setBurgerMenu(true);
@@ -35,11 +39,12 @@ function Navigation({isLogin}) {
 
         {isBurgerMenu ?
           <div className='burger'>
+            <img onClick={closeBurgerMenu} className='burger__close-btn' src={CloseBtn} alt="Закрыть" />
             <ul className='burger__list'>
-              <li className='burger__item'><Link className='nav__link' to="/">Главная</Link></li>
-              <li className='burger__item'><Link className='nav__link' to="/movies">Фильмы</Link></li>
-              <li className='burger__item'><Link className='nav__link' to="/saved-movies">Сохранённые фильмы</Link></li>
-              <li className='burger__item'><Link className='nav__link' to="/profile">Аккаунт</Link></li>
+              <li className='burger__item'><Link className='burger__link' to="/">Главная</Link></li>
+              <li className='burger__item'><Link className='burger__link' to="/movies">Фильмы</Link></li>
+              <li className='burger__item'><Link className='burger__link' to="/saved-movies">Сохранённые фильмы</Link></li>
+              <li className='burger__item'><Link className='burger__link' to="/profile">Аккаунт</Link><button className='nav__button-log'></button></li>
             </ul>
           </div>
           : ""}
