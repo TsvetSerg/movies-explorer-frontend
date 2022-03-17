@@ -9,9 +9,9 @@ function EditProfile() {
     <h1 className='auth__title'>Редактировать профиль</h1>
     <form className='auth__form'>
       <p className='auth__input-title'>Имя</p>
-      <input className='auth__input' type="text" id="name" name="name" required />
+      <input className='auth__input' type="text" id="name" name="editName" required />
       <p className='auth__input-title'>E-mail</p>
-      <input className='auth__input' type="text" id="email" name="email" required />
+      <input className='auth__input' type="text" id="email" name="editMail" required />
       <button className='auth__button'>Сохранить</button>
     </form>
   </section>
