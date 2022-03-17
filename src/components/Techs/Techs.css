@@ -1,0 +1,123 @@
+.techs {
+  /* border: 1px red solid; */
+  /* max-width: 1280px; */
+  /* margin: auto; */
+  /* padding: 0 35px; */
+  display: flex;
+  flex-direction: column;
+  background-color: #272727;
+  padding-top: 100px;
+  max-width: 1280px;
+  justify-content: center;
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+.techs__info {
+  margin: 0 auto;
+  margin-top: 90px;
+  margin-bottom: 100px;
+  max-width: 600px;
+}
+
+.techs__heading {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-weight: normal;
+  font-size: 50px;
+  line-height: 58px;
+  letter-spacing: -0.04em;
+  margin-bottom: 26px;
+}
+
+.techs__description {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.04em;
+  max-width: 460px;
+}
+
+.techs__list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 100px;
+  justify-content: center
+}
+
+.techs__item {
+  margin: 0;
+  padding: 0;
+  width: 90px;
+  font-weight: normal;
+  font-size: 14px;
+  text-align: center;
+  letter-spacing: -0.04em;
+  border: none;
+  background-color: #303030;
+  border-radius: 10px;
+  margin-right: 10px;
+  padding-top: 21px;
+  padding-bottom: 22px;
+}
+
+@media screen and (max-width: 900px) {
+  .techs {
+    padding-top: 90px;
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+  .techs__info {
+    margin-top: 80px;
+    margin-bottom: 83px;
+  }
+  .techs__description {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .techs__item {
+    font-size: 12px;
+    line-height: 15px;
+    width: 84px;
+  }
+  .techs__list {
+    margin-bottom: 90px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .techs {
+    padding-top: 70px;
+    padding-left: 18px;
+    padding-right: 18px;
+    background-color: #202020;
+  }
+  .techs__info {
+    margin-top: 60px;
+    margin-bottom: 50px;
+  }
+  .techs__heading {
+    font-size: 30px;
+    line-height: 36px;
+  }
+  .techs__description {
+    font-size: 11px;
+    line-height: 16px;
+  }
+  .techs__list {
+    display: grid;
+    grid-template-columns: repeat(2, 84px);
+    gap: 10px;
+    margin-bottom: 70px;
+  }
+  .techs__item {
+    margin: 0;
+  }
+}
