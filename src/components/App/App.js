@@ -9,7 +9,7 @@ import NotFound from '../NotFound/NotFound';
 import Movies from '../Movies/Movies';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { savedMovie } from '../../utils/movieData';
+import moviesData, { savedMovie } from '../../utils/movieData';
 import Profile from '../Profile/Profile';
 import EditProfile from '../EditProfile/EditProfile';
 import SearchForm from '../SearchForm/SearchForm';
@@ -17,16 +17,43 @@ import CurrentUserContext from '../../contexts/CurrentUserContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as AuthMainApi from '../../utils/AuthMainApi';
 import movieApi from '../../utils/MainApi';
+import * as MoviesApi from '../../utils/MoviesApi';
+import Fuse from "fuse.js";
 
 function App() {
 
   const history = useHistory();
   const [isLogin, setLogin] = React.useState(false)
   const [currentUser, setCurrentUser] = React.useState({});
+  const [currentMovie, setCurrentMovie] = React.useState([]);
+  const [isSearchFilm, setSearchFilm] = React.useState(false)
+  const [isFilterMoviesData, setFilterMoviesData] = React.useState([])
+  const [isMassageSearch, setMassageSearch] = React.useState('')
 
-  function handelLogin() {
-    setLogin(true)
-  }
+  React.useEffect(() => {
+    handelCheckToken();
+    const token = localStorage.getItem('token');
+    if (token) {
+      Promise.all([movieApi.getUser(), MoviesApi.getBestFilm()])
+      .then(([userInfo, allFilm]) => {
+        setCurrentUser(userInfo)
+        setCurrentMovie(allFilm)
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
+  }, [ ])
+
+  React.useEffect(() => {
+    const tokenMovie = JSON.parse(localStorage.getItem('movie'));
+    if(tokenMovie) {
+      setFilterMoviesData(tokenMovie)
+      setSearchFilm(true);
+    } else {
+      setMassageSearch('Вы еще ничего не искали!!')
+    }
+  }, [ ])
 
   function handelCheckToken() {
     const token = localStorage.getItem('token')
@@ -35,14 +62,20 @@ function App() {
       movieApi.setToken(token)
       AuthMainApi.getToken(token)
       .then((iserInfo) => {
-        setLogin(true)
-        history.push('/movies')
-        // Тут будем обновлять Current данные
+        setLogin(true);
+        // history.push('/movies');
+        return setCurrentUser(iserInfo);
       })
       .catch((err) => {
         console.log(err);
       })
     }
+  }
+
+  function handelTokenRemove() {
+    localStorage.removeItem('token');
+    setLogin(false)
+    history.push('/')
   }
 
   function handelRegistr(name, email, password) {
@@ -61,13 +94,37 @@ function App() {
       if(date.token) {
         setLogin(true);
         history.push('/movies')
-        handelCheckToken()
+        // handelCheckToken()
       }
     })
     .catch((err) => {
       console.log(err);
     })
   }
+
+
+  function searchFilm(moviesData, searchText) {
+    const fuse = new Fuse(moviesData, {
+      keys: ["nameRU", 'nameEN'],
+      minMatchCharLength: 3,
+      threshold: 0.6,
+    });
+    return fuse.search(searchText)
+  }
+
+  function searchMovie(searchText) {
+    const result = searchFilm(currentMovie, searchText)
+    // if(currentMovie.length > 0) {
+    //   // тут будем менять переменную на результата поиска(не выводить ошику)
+    // } else {
+    //   // тут будем менять переменную на результата поиска(выводить ошику)
+    // }
+    const tokenMovie = localStorage.setItem('movie', JSON.stringify(result))
+    setFilterMoviesData(result);
+    setSearchFilm(true);
+    setMassageSearch('')
+  }
+
 
   return (
     <div className="page__container">
@@ -76,7 +133,9 @@ function App() {
         <Switch>
 
           <Route exact path="/">
-            <Header/>
+            <Header
+              isLogin={isLogin}
+            />
             <Main/>
             <Footer/>
           </Route>
@@ -87,9 +146,16 @@ function App() {
             Component = {(
               <Route>
                 <Header
-                 isLogin={handelLogin}
+                  name = {currentUser}
+                  isLogin={isLogin}
                  />
-                <Movies/>
+                <Movies
+                  isSearchFilm = {isSearchFilm}
+                  // dataMovie = {isSearchFilm ? isFilterMoviesData: currentMovie}
+                  dataMovie = {isFilterMoviesData}
+                  searchMovie = {searchMovie}
+                  Message = {isMassageSearch}
+                />
                 <Footer/>
               </Route>
             )}/>
@@ -100,7 +166,7 @@ function App() {
             Component = {(
               <Route>
                 <Header
-                 isLogin={handelLogin}
+                 isLogin={isLogin}
                  />
                 <SearchForm/>
                 <MoviesCardList dataMovie={savedMovie}/>
@@ -114,9 +180,11 @@ function App() {
             Component = {(
               <Route>
                 <Header
-                 isLogin={handelLogin}
+                 isLogin={isLogin}
                  />
-                <Profile/>
+                <Profile
+                  handelTokenRemove = {handelTokenRemove}
+                />
               </Route>
             )}/>
 
