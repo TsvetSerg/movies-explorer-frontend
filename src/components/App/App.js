@@ -9,7 +9,6 @@ import NotFound from '../NotFound/NotFound';
 import Movies from '../Movies/Movies';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import moviesData, { savedMovie } from '../../utils/movieData';
 import Profile from '../Profile/Profile';
 import EditProfile from '../EditProfile/EditProfile';
 import SearchForm from '../SearchForm/SearchForm';
@@ -19,6 +18,7 @@ import * as AuthMainApi from '../../utils/AuthMainApi';
 import movieApi from '../../utils/MainApi';
 import * as MoviesApi from '../../utils/MoviesApi';
 import Fuse from "fuse.js";
+import * as MainApi from '../../utils/MainApi'
 
 function App() {
 
@@ -27,10 +27,14 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [currentMovie, setCurrentMovie] = React.useState([]);
   const [isSearchFilm, setSearchFilm] = React.useState(false)
+  const [isLocal, setLocal] = React.useState();
   const [isFilterMoviesData, setFilterMoviesData] = React.useState([])
-  const [isMassageSearch, setMassageSearch] = React.useState('')
+  const [isMassageSearch, setMassageSearch] = React.useState('Ничего не найдено')
+  const [isShortFilm, setShortFilm] = React.useState(false);
+  const [isSavedMovie, setSavedMovie] = React.useState([]);
 
   React.useEffect(() => {
+    // console.log(isShortFilm);
     handelCheckToken();
     const token = localStorage.getItem('token');
     if (token) {
@@ -47,13 +51,32 @@ function App() {
 
   React.useEffect(() => {
     const tokenMovie = JSON.parse(localStorage.getItem('movie'));
-    if(tokenMovie) {
+    if(tokenMovie && tokenMovie.length === 0) {
+      // isMassageSearch()
+      setLocal(false)
+    } else if (tokenMovie) {
       setFilterMoviesData(tokenMovie)
       setSearchFilm(true);
+      setLocal(false)
     } else {
-      setMassageSearch('Вы еще ничего не искали!!')
+      // setMassageSearch('false')
+      setLocal(false)
     }
-  }, [ ])
+  }, [isLocal])
+
+  function checkfilm() {
+    const tokenMovie = JSON.parse(localStorage.getItem('movie'));
+  }
+
+  React.useEffect(() => {
+    Promise.all([movieApi.getAllLikeMovie()])
+    .then(([SavedFilm]) => {
+      setSavedMovie(SavedFilm)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }, [ ]);
 
   function handelCheckToken() {
     const token = localStorage.getItem('token')
@@ -63,7 +86,7 @@ function App() {
       AuthMainApi.getToken(token)
       .then((iserInfo) => {
         setLogin(true);
-        // history.push('/movies');
+        history.push('/movies');
         return setCurrentUser(iserInfo);
       })
       .catch((err) => {
@@ -102,29 +125,87 @@ function App() {
     })
   }
 
+  // ------------------------------------------------------
 
-  function searchFilm(moviesData, searchText) {
-    const fuse = new Fuse(moviesData, {
-      keys: ["nameRU", 'nameEN'],
-      minMatchCharLength: 3,
-      threshold: 0.6,
-    });
-    return fuse.search(searchText)
+  const [request, setRequest] = React.useState('')
+
+  function filter(movie, request) {
+    let movieBase;
+    if (request) {
+      // console.log(request);
+      const regex = new RegExp(request, 'gi');
+      movieBase = movie.filter((item) => {
+        return regex.test(item.nameRU) || regex.test(item.nameEN)
+      })
+      if(movieBase.length === 0) {
+        setSearchFilm(false)
+        setMassageSearch('Ничего не найдено, попробуйте ввести другой запрос.')
+      } else {
+        setMassageSearch('')
+      }
+      return movieBase;
+    }
+    return movieBase;
   }
 
-  function searchMovie(searchText) {
-    const result = searchFilm(currentMovie, searchText)
-    // if(currentMovie.length > 0) {
-    //   // тут будем менять переменную на результата поиска(не выводить ошику)
-    // } else {
-    //   // тут будем менять переменную на результата поиска(выводить ошику)
-    // }
-    const tokenMovie = localStorage.setItem('movie', JSON.stringify(result))
-    setFilterMoviesData(result);
-    setSearchFilm(true);
-    setMassageSearch('')
+  function searchMovie22(request) {
+    setTimeout(() => {
+      setRequest(request)
+      const result = filter(currentMovie, request);
+      localStorage.setItem('movie', JSON.stringify(result));
+      setLocal(true);
+
+    }, 500)
+
   }
 
+
+
+  // ------------------------------------------------------
+
+
+  // function searchFilm(moviesData, searchText) {
+  //   const fuse = new Fuse(moviesData, {
+  //     keys: ["nameRU", 'nameEN'],
+  //     minMatchCharLength: 3,
+  //     threshold: 0.6,
+  //   });
+  //   return fuse.search(searchText)
+  // }
+
+  // function searchMovie(searchText) {
+  //   const result = searchFilm(currentMovie, searchText)
+  //   // if(currentMovie.length > 0) {
+  //   //   // тут будем менять переменную на результата поиска(не выводить ошику)
+  //   // } else {
+  //   //   // тут будем менять переменную на результата поиска(выводить ошику)
+  //   // }
+  //   const tokenMovie = localStorage.setItem('movie', JSON.stringify(result))
+  //   // setFilterMoviesData(result);
+  //   setSearchFilm(true);
+  //   setMassageSearch('')
+  // }
+
+  function ChangeFilter() {
+      setShortFilm(true);
+      console.log(isShortFilm);
+  }
+
+  // описываем логику лайка/сохранение фильма
+
+  function handelSavedMovie(movie) {
+    addMovie(movie);
+  }
+
+  function addMovie(movie) {
+    movieApi.savedMovie(movie)
+    .then((res) => {
+      setSavedMovie([...isSavedMovie, { ...res, id: res.movieId}])
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
 
   return (
     <div className="page__container">
@@ -153,8 +234,10 @@ function App() {
                   isSearchFilm = {isSearchFilm}
                   // dataMovie = {isSearchFilm ? isFilterMoviesData: currentMovie}
                   dataMovie = {isFilterMoviesData}
-                  searchMovie = {searchMovie}
+                  searchMovie = {searchMovie22}
                   Message = {isMassageSearch}
+                  ChangeFilter = {ChangeFilter}
+                  savedMovie={handelSavedMovie}
                 />
                 <Footer/>
               </Route>
@@ -169,7 +252,10 @@ function App() {
                  isLogin={isLogin}
                  />
                 <SearchForm/>
-                <MoviesCardList dataMovie={savedMovie}/>
+                <MoviesCardList
+                  isSearchFilm = {isSearchFilm}
+                  dataMovie={isSavedMovie}
+                />
                 <Footer/>
               </Route>
             )}/>

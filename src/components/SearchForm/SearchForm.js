@@ -3,18 +3,17 @@ import React from 'react';
 import image from '../../images/searchwhite.svg'
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-function SearchForm({dataMovie, searchMovie}) {
+function SearchForm({dataMovie, searchMovie, ChangeFilter}) {
 
   const [isText, setText] = React.useState('')
 
   function handelChangeInput(e) {
-    e.preventDefault();
     setText(e.target.value);
   }
 
   function handelSumbit(e) {
     e.preventDefault();
-    searchMovie(isText)
+    searchMovie(isText);
     setText('')
   }
 
@@ -25,7 +24,7 @@ function SearchForm({dataMovie, searchMovie}) {
           <input onChange={handelChangeInput} value={isText} className='searchForm__input' type="text" id="search" name="search" placeholder='Фильм' minLength='1' required/>
           <button type='submit' className='searchForm__button'><img className='searchForm__image' src={image} alt="Кнопка поиска" /></button>
         </div>
-        <FilterCheckbox/>
+        <FilterCheckbox ChangeFilter={ChangeFilter} />
       </form>
 
     </section>

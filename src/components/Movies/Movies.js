@@ -3,7 +3,7 @@ import React from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
-function Movies({dataMovie, searchMovie, isSearchFilm, Message}) {
+function Movies({dataMovie, searchMovie, isSearchFilm, Message, ChangeFilter, savedMovie}) {
 
   const [MoviesOnDisplay, setMoviesOnDisplay] = React.useState(() => {
 
@@ -34,8 +34,8 @@ function Movies({dataMovie, searchMovie, isSearchFilm, Message}) {
 
   return (
     <section className='movies__containers'>
-      <SearchForm dataMovie={dataMovie} searchMovie={searchMovie}/>
-      <MoviesCardList Message={Message} dataMovie={MovieBase} isSearchFilm={isSearchFilm}/>
+      <SearchForm dataMovie={dataMovie} searchMovie={searchMovie} ChangeFilter={ChangeFilter} />
+      <MoviesCardList savedMovie={savedMovie} Message={Message} dataMovie={MovieBase} isSearchFilm={isSearchFilm}/>
       <button onClick={handelMoreMovies} className='movies__more'>Еще</button>
     </section>
   )
