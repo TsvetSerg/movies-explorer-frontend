@@ -4,7 +4,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
 
 
-function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie}) {
+function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFilm, isLiked, SavedMovieId}) {
 
   const [loading, setLoading] = React.useState(false)
 
@@ -14,7 +14,7 @@ function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie}) {
 
       {isSearchFilm ?
       dataMovie.map((movie) => {
-        return (<MoviesCard savedMovie={savedMovie} isSearchFilm={isSearchFilm} key={movie.id} movie={movie}/>)
+        return (<MoviesCard SavedMovieId={SavedMovieId} isLiked={isLiked} isLikeFilm={isLikeFilm} savedMovie={savedMovie} isSearchFilm={isSearchFilm} key={isLikeFilm ? movie._id : movie.id} movie={movie}/>)
       })
       : <h1>{Message}</h1>
       }

@@ -17,8 +17,6 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import * as AuthMainApi from '../../utils/AuthMainApi';
 import movieApi from '../../utils/MainApi';
 import * as MoviesApi from '../../utils/MoviesApi';
-import Fuse from "fuse.js";
-import * as MainApi from '../../utils/MainApi'
 
 function App() {
 
@@ -32,9 +30,11 @@ function App() {
   const [isMassageSearch, setMassageSearch] = React.useState('Ничего не найдено')
   const [isShortFilm, setShortFilm] = React.useState(false);
   const [isSavedMovie, setSavedMovie] = React.useState([]);
+  const [isLikeFilm, setLikeFilm] = React.useState(true);
+  const [isCreateMovie, setCreateMovie] = React.useState(false);
+
 
   React.useEffect(() => {
-    // console.log(isShortFilm);
     handelCheckToken();
     const token = localStorage.getItem('token');
     if (token) {
@@ -52,31 +52,31 @@ function App() {
   React.useEffect(() => {
     const tokenMovie = JSON.parse(localStorage.getItem('movie'));
     if(tokenMovie && tokenMovie.length === 0) {
-      // isMassageSearch()
       setLocal(false)
     } else if (tokenMovie) {
       setFilterMoviesData(tokenMovie)
       setSearchFilm(true);
       setLocal(false)
     } else {
-      // setMassageSearch('false')
       setLocal(false)
     }
   }, [isLocal])
 
-  function checkfilm() {
-    const tokenMovie = JSON.parse(localStorage.getItem('movie'));
-  }
 
   React.useEffect(() => {
     Promise.all([movieApi.getAllLikeMovie()])
     .then(([SavedFilm]) => {
       setSavedMovie(SavedFilm)
+      setCreateMovie(false)
     })
     .catch((err) => {
       console.log(err);
     })
-  }, [ ]);
+  }, [isCreateMovie]);
+
+  React.useEffect(() => {
+    handelLikeButton(isSavedMovie, currentMovie)
+  }, [ ])
 
   function handelCheckToken() {
     const token = localStorage.getItem('token')
@@ -94,6 +94,7 @@ function App() {
       })
     }
   }
+
 
   function handelTokenRemove() {
     localStorage.removeItem('token');
@@ -163,29 +164,6 @@ function App() {
 
   // ------------------------------------------------------
 
-
-  // function searchFilm(moviesData, searchText) {
-  //   const fuse = new Fuse(moviesData, {
-  //     keys: ["nameRU", 'nameEN'],
-  //     minMatchCharLength: 3,
-  //     threshold: 0.6,
-  //   });
-  //   return fuse.search(searchText)
-  // }
-
-  // function searchMovie(searchText) {
-  //   const result = searchFilm(currentMovie, searchText)
-  //   // if(currentMovie.length > 0) {
-  //   //   // тут будем менять переменную на результата поиска(не выводить ошику)
-  //   // } else {
-  //   //   // тут будем менять переменную на результата поиска(выводить ошику)
-  //   // }
-  //   const tokenMovie = localStorage.setItem('movie', JSON.stringify(result))
-  //   // setFilterMoviesData(result);
-  //   setSearchFilm(true);
-  //   setMassageSearch('')
-  // }
-
   function ChangeFilter() {
       setShortFilm(true);
       console.log(isShortFilm);
@@ -202,9 +180,34 @@ function App() {
     .then((res) => {
       setSavedMovie([...isSavedMovie, { ...res, id: res.movieId}])
     })
+    .then(() => {
+      setCreateMovie(true)
+    })
     .catch((err) => {
       console.log(err);
     })
+  }
+
+  const [isLiked, setLikede] = React.useState(false);
+
+  function Liked() {
+    handelLikeButton(isSavedMovie, currentMovie)
+  }
+
+  function handelLikeButton(savedMovie, movieBase) {
+    if(savedMovie.length > movieBase.length) {
+      setLikede(true);
+    } else {
+      setLikede(false);
+    }
+  }
+
+  function SavedMovieId(movie) {
+    return isSavedMovie.some((item) => item.movieId === movie.id)
+  }
+
+  function SavedFilmId(movie) {
+    return isSavedMovie.some((item) => item.owner === movie.owner)
   }
 
   return (
@@ -231,6 +234,8 @@ function App() {
                   isLogin={isLogin}
                  />
                 <Movies
+                  SavedMovieId ={SavedMovieId}
+                  isLiked = {isLiked}
                   isSearchFilm = {isSearchFilm}
                   // dataMovie = {isSearchFilm ? isFilterMoviesData: currentMovie}
                   dataMovie = {isFilterMoviesData}
@@ -253,6 +258,8 @@ function App() {
                  />
                 <SearchForm/>
                 <MoviesCardList
+                  SavedMovieId ={SavedMovieId}
+                  isLikeFilm = {isLikeFilm}
                   isSearchFilm = {isSearchFilm}
                   dataMovie={isSavedMovie}
                 />

@@ -55,7 +55,6 @@ class MainApi {
         description: movieCard.description,
         image: `https://api.nomoreparties.co${movieCard.image.url}`,
         trailerLink: movieCard.trailerLink,
-        // thumbnail: movieCard.thumbnail,
         owner: movieCard.owner,
         movieId: movieCard.id.toString(),
         nameRU: movieCard.nameRU,
