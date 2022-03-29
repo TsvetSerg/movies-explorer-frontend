@@ -20,6 +20,9 @@
   cursor: pointer;
   opacity: 0.6;
 }
+.movies__more-dis {
+  display: none;
+}
 
 .movies__more:hover {
   opacity: 1;

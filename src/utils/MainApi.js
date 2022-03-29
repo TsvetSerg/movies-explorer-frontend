@@ -53,10 +53,10 @@ class MainApi {
         duration: movieCard.duration,
         year: movieCard.year,
         description: movieCard.description,
-        image: `https://api.nomoreparties.co${movieCard.image.url}`,
+        image: movieCard.image,
         trailerLink: movieCard.trailerLink,
         owner: movieCard.owner,
-        movieId: movieCard.id.toString(),
+        movieId: String(movieCard.movieId),
         nameRU: movieCard.nameRU,
         nameEN: movieCard.nameEN,
       })

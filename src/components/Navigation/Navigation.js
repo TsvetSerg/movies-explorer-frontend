@@ -41,10 +41,10 @@ function Navigation({isLogin}) {
           <div className='burger'>
             <img onClick={closeBurgerMenu} className='burger__close-btn' src={CloseBtn} alt="Закрыть" />
             <ul className='burger__list'>
-              <li className='burger__item'><Link className='burger__link' to="/">Главная</Link></li>
-              <li className='burger__item'><Link className='burger__link' to="/movies">Фильмы</Link></li>
-              <li className='burger__item'><Link className='burger__link' to="/saved-movies">Сохранённые фильмы</Link></li>
-              <li className='burger__item'><Link className='burger__link' to="/profile">Аккаунт</Link><button className='nav__button-log'></button></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/">Главная</Link></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/movies">Фильмы</Link></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/saved-movies">Сохранённые фильмы</Link></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/profile">Аккаунт</Link><button className='nav__button-log'></button></li>
             </ul>
           </div>
           : ""}

@@ -1,7 +1,7 @@
 import './FilterCheckbox.css'
 import React from 'react';
 
-function FilterCheckbox({durationFilter, checked, ChangeFilter}) {
+function FilterCheckbox({ChangeFilter}) {
 
   function handleOnChange(e) {
     ChangeFilter(e.target.checked)
