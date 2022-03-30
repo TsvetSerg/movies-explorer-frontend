@@ -27,7 +27,7 @@ function App() {
   const [isSearchFilm, setSearchFilm] = React.useState(true)
   const [isLocal, setLocal] = React.useState();
   const [isFilterMoviesData, setFilterMoviesData] = React.useState([])
-  const [isMassageSearch, setMassageSearch] = React.useState('Ничего не найдено');
+  const [isMassageSearch, setMassageSearch] = React.useState('');
   const [isShortFilm, setShortFilm] = React.useState(false);
   const [isSavedMovie, setSavedMovie] = React.useState([]);
   const [isLikeFilm, setLikeFilm] = React.useState(true);
@@ -37,6 +37,8 @@ function App() {
   const [isLoading, setLoading] = React.useState(false);
   const [isNotResult, setNotResult] = React.useState(true);
   const [isAuthError, setAuthError] = React.useState('');
+  const [isRenderFilm, setRenderFilm] = React.useState([]);
+  const [isSerchSaveFilm,  setSerchSaveFilm] = React.useState(false);
 
   React.useEffect(() => {
     handelCheckToken();
@@ -61,6 +63,7 @@ function App() {
       setNotResult(false);
     } else if (tokenMovie) {
       setFilterMoviesData(tokenMovie)
+      // setNotResult(true)
       setSearchFilm(false);
       setLocal(false);
       setLoading(false);
@@ -75,8 +78,8 @@ function App() {
   React.useEffect(() => {
     Promise.all([movieApi.getAllLikeMovie()])
     .then(([SavedFilm]) => {
-      setSavedMovie(SavedFilm)
-      setCreateMovie(false)
+      setSavedMovie(SavedFilm);
+      setCreateMovie(false);
     })
     .catch((err) => {
       setSearchFilm(true);
@@ -89,7 +92,6 @@ function App() {
     Promise.all([movieApi.getAllLikeMovie()])
     .then(([data]) => {
       setSavedMovie(data);
-      console.log(isSavedMovie);
     })
     .catch((err) => {
       console.log(err);
@@ -131,6 +133,7 @@ function App() {
   function handelTokenRemove() {
     localStorage.removeItem('token');
     localStorage.removeItem('movie');
+    localStorage.removeItem('movieSaved');
     setLogin(false)
     history.push('/')
   }
@@ -178,6 +181,20 @@ function App() {
     })
   }
 
+  function handelUpdateProfile(name, email) {
+    movieApi.updateUser({
+      name: name,
+      email: email
+    })
+    .then((data) => {
+      history.push('/profile');
+      setCurrentUser(data);
+    })
+    .catch(() => {
+      setAuthError('Что то пошло не так. Возможно данный E-mail занят или вы ввели не подходящие данные.');
+    })
+  }
+
   // ------------------------------------------------------
 
 
@@ -185,7 +202,6 @@ function App() {
   function filter(movie, request) {
     let movieBase;
     if (request) {
-      // console.log(request);
       const regex = new RegExp(request, 'gi');
       movieBase = movie.filter((item) => {
         return regex.test(item.nameRU) || regex.test(item.nameEN)
@@ -202,7 +218,7 @@ function App() {
     return movieBase;
   }
 
-  function searchMovie22(request) {
+  function searchMovie(request) {
     setLoading(true);
     setNotResult(true);
     setTimeout(() => {
@@ -215,6 +231,39 @@ function App() {
 
   }
 
+  function searchSavedMovie(request) {
+    setLoading(true);
+    setNotResult(true);
+    setSerchSaveFilm(true);
+    setTimeout(() => {
+      setRequest(request)
+      const result = filter(isSavedMovie, request);
+      localStorage.setItem('movieSaved', JSON.stringify(result));
+      setLocal(true);
+
+    }, 500)
+    localStorage.removeItem('movieSaved');
+    setRenderFilm([]);
+
+  }
+
+  React.useEffect(() => {
+    const savedMovie = JSON.parse(localStorage.getItem('movieSaved'));
+    if(savedMovie && savedMovie.length === 0) {
+      setLocal(false);
+      setLoading(false);
+      setSerchSaveFilm(false)
+    } else if (savedMovie) {
+      setRenderFilm(savedMovie)
+      setSearchFilm(false);
+      setLocal(false);
+      setLoading(false);
+    } else {
+      setLocal(false);
+      setLoading(false);
+      setSerchSaveFilm(false)
+    }
+  }, [isLocal])
 
 
   // ------------------------------------------------------
@@ -241,7 +290,6 @@ function App() {
       description: movie.description ? movie.description : 'Not description',
       image: movie.image ? baseUrl + movie.image.url : 'No Image',
       trailerLink: movie.trailerLink ? movie.trailerLink : 'trailerLink',
-      // owner: currentUser._id,
       movieId: movie.id,
       nameRU: movie.nameRU ? movie.nameRU : 'Not nameRU',
       nameEN: movie.nameEN ? movie.nameEN : 'Not nameEN',
@@ -257,14 +305,16 @@ function App() {
     })
   }
 
-  function deletMovie(movie) {
-    movieApi.deletMovie(movie._id)
+  function deletMovie(id) {
+    movieApi.deletMovie(id)
     .then(() => {
       setCreateMovie(true)
     })
-    .catch(() => {
-      history.push('/saved-movies')
+    .catch((err) => {
+      console.log(err);
     })
+
+
   }
 
 
@@ -328,12 +378,13 @@ function App() {
                   isLiked = {isLiked}
                   isSearchFilm = {isSearchFilm}
                   dataMovie = {isShortFilm ? filterDuration(isFilterMoviesData) : isFilterMoviesData}
-                  searchMovie = {searchMovie22}
+                  searchMovie = {searchMovie}
                   Message = {isMassageSearch}
                   ChangeFilter = {ChangeFilter}
                   savedMovie={handelSavedMovie}
                   deletMovie = {deletMovie}
                   handelChangeFilter = {handelChangeFilter}
+                  deletSaveMovie = {isSavedMovie}
                 />
                 <Footer/>
               </Route>
@@ -349,13 +400,13 @@ function App() {
                  />
                 <SearchForm
                   ChangeFilter = {handelChangeFilter}
-
+                  searchSavedMovie = {searchSavedMovie}
                 />
                 <MoviesCardList
                   SavedMovieId ={SavedFilmId}
                   isLikeFilm = {isLikeFilm}
-                  isSearchFilm = {false}
-                  dataMovie={isShortFilm ? filterDuration(isSavedMovie) : isSavedMovie}
+                  isSearchFilm = {isSearchFilm}
+                  dataMovie={isSerchSaveFilm ? isRenderFilm : isShortFilm ? filterDuration(isSavedMovie) : isSavedMovie}
                   deletMovie = {deletMovie}
                 />
                 <Footer/>
@@ -381,7 +432,11 @@ function App() {
             authorize = {isLogin}
             Component = {(
               <Route>
-                <EditProfile/>
+                <EditProfile
+                  handelUpdate = {handelUpdateProfile}
+                  authError = {isAuthError}
+                  setAuthError = {setAuthError}
+                />
               </Route>
             )}/>
 
@@ -396,6 +451,8 @@ function App() {
           <Route path="/signup">
             <Register
               handelRegistr = {handelRegistr}
+              authError = {isAuthError}
+              setAuthError = {setAuthError}
             />
           </Route>
 

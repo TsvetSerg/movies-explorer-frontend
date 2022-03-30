@@ -4,7 +4,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
 
 
-function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFilm, isLiked, SavedMovieId, deletMovie, isLoading, isNotResult}) {
+function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFilm, isLiked, SavedMovieId, deletMovie, isLoading, isNotResult, deletSaveMovie}) {
 
   const [loading, setLoading] = React.useState(false);
   const classNameMovieList = isSearchFilm || isLoading ? 'movies-list_not-list' : 'movies-list';
@@ -26,6 +26,7 @@ function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFil
           key={isLikeFilm ? movie._id : movie.id}
           movie={movie}
           isLoading={isLoading}
+          deletSaveMovie={deletSaveMovie}
           />)
       })
       }
@@ -39,4 +40,3 @@ function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFil
   )
 }
 export default MoviesCardList;
-// key={isSearchFilm ? movie.item.duration : movie.id}

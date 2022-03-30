@@ -21,13 +21,13 @@ class MainApi {
   }
 
   // обновляем профиль пользователя
-  updateUser(input) {
+  updateUser({name, email}) {
     return fetch(this._url + '/users/me', {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
-        name: input.editName,
-        email: input.editMail
+        "name": name,
+        "email": email
       })
     })
     .then(this._check)
