@@ -40,6 +40,7 @@ function App() {
   const [isRenderFilm, setRenderFilm] = React.useState([]);
   const [isSerchSaveFilm,  setSerchSaveFilm] = React.useState(false);
   const [isSlider, setSlider] = React.useState(false)
+  const [isMyFilm, setMyFilm] = React.useState([]);
 
   React.useEffect(() => {
     handelCheckToken();
@@ -136,7 +137,6 @@ function App() {
       AuthMainApi.getToken(token)
       .then((iserInfo) => {
         setLogin(true);
-        history.push('/movies');
         return setCurrentUser(iserInfo);
       })
       .catch((err) => {
@@ -406,7 +406,7 @@ function App() {
                 <Movies
                   isNotResult = {isNotResult}
                   isLoading = {isLoading}
-                  SavedMovieId ={SavedMovieId}
+                  SavedMovieId ={SavedFilmId}
                   isLiked = {isLiked}
                   isSearchFilm = {isSearchFilm}
                   dataMovie = {isShortFilm ? filterFilm(isFilterMoviesData) : isFilterMoviesData}
@@ -477,21 +477,31 @@ function App() {
               </Route>
             )}/>
 
-          <Route path="/signin">
-            <Login
-              handelAutorize = {handelAutorize}
-              authError = {isAuthError}
-              setAuthError = {setAuthError}
-            />
-          </Route>
+          <ProtectedRoute
+            exact path="/signin"
+            authorize = {!isLogin}
+            Component = {(
+              <Route>
+                <Login
+                  handelAutorize = {handelAutorize}
+                  authError = {isAuthError}
+                  setAuthError = {setAuthError}
+                />
+              </Route>
+            )}/>
 
-          <Route path="/signup">
-            <Register
-              handelRegistr = {handelRegistr}
-              authError = {isAuthError}
-              setAuthError = {setAuthError}
-            />
-          </Route>
+          <ProtectedRoute
+            exact path="/signup"
+            authorize = {!isLogin}
+            Component = {(
+              <Route>
+                <Register
+                  handelRegistr = {handelRegistr}
+                  authError = {isAuthError}
+                  setAuthError = {setAuthError}
+               />
+              </Route>
+            )}/>
 
           <Route path="*">
            <NotFound/>

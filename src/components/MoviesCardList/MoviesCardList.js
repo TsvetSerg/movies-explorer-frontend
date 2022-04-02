@@ -11,18 +11,18 @@ function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFil
   const pathname = useLocation();
   const [isNoMovie, setNoMovie] = React.useState(false);
 
-  React.useEffect(() => {
-    const movie = document.getElementById('more');
-    console.log(movie);
-    if(pathname === '/saved-movies') {
-      if (!movie == null) {
-        setNoMovie(true)
-      } else {
-        setNoMovie(false)
-      }
-    }
+  // React.useEffect(() => {
+  //   const movie = document.getElementById('more');
+  //   console.log(movie);
+  //   if(pathname === '/saved-movies') {
+  //     if (!movie == null) {
+  //       setNoMovie(true)
+  //     } else {
+  //       setNoMovie(false)
+  //     }
+  //   }
 
-  }, [pathname])
+  // }, [pathname])
 
 
 
