@@ -4,7 +4,7 @@ import image from '../../images/searchwhite.svg'
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import { useLocation } from 'react-router-dom';
 
-function SearchForm({searchMovie, ChangeFilter, searchSavedMovie}) {
+function SearchForm({searchMovie, ChangeFilter, searchSavedMovie, ChangeFilterOut, isSlider, setSlider}) {
 
   const [isText, setText] = React.useState('')
   const [isValidation, setValidation] = React.useState(true)
@@ -19,16 +19,19 @@ function SearchForm({searchMovie, ChangeFilter, searchSavedMovie}) {
   function handelSumbit(e) {
     e.preventDefault();
     if (pathname === '/movies') {
-      console.log('mov');
       searchMovie(isText);
-      setText('');
+      setText(isText);
+      localStorage.setItem('query', JSON.stringify(isText));
     } else {
-      console.log('serch');
       searchSavedMovie(isText);
-      setText('');
+      setText(isText);
+      localStorage.setItem('query', JSON.stringify(isText));
     }
-
   }
+
+  React.useEffect(() => {
+    setText(JSON.parse(localStorage.getItem('query')))
+  }, [])
 
   return (
     <section className='searchForm'>
@@ -38,7 +41,7 @@ function SearchForm({searchMovie, ChangeFilter, searchSavedMovie}) {
           <button disabled={!isValidation} type='submit' className={isValidation ? 'searchForm__button' : 'searchForm__button-dis'}><img className='searchForm__image' src={image} alt="Кнопка поиска" /></button>
           <span className='searchForm__error'>{isValidation ? '' : 'Нужно ввести ключевое слово'}</span>
         </div>
-        <FilterCheckbox ChangeFilter={ChangeFilter} />
+        <FilterCheckbox isSlider={isSlider} setSlider={setSlider} ChangeFilterOut={ChangeFilterOut} ChangeFilter={ChangeFilter} />
       </form>
 
 

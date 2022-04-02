@@ -37,7 +37,7 @@ function MoviesCard({movie, savedMovie, deletMovie, isLikeFilm, SavedMovieId, is
 
 
   return (
-    <div className={classNameMovieee || classNameMovie}>
+    <div id='card' className={classNameMovieee || classNameMovie}>
       <a rel="noreferrer" className='movie__link' target="_blank" href={movie.trailerLink}><img className='movie__picture' src={isLikeFilm ? movie.image : `https://api.nomoreparties.co${movie.image.url}`} alt={movie.nameRU} /></a>
       <div className='movie__wrapper'>
         <h1 className='movie__title'>{movie.nameRU}</h1>

@@ -3,7 +3,23 @@ import React from 'react';
 import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 
-function Movies({dataMovie, searchMovie, isSearchFilm, Message, savedMovie, isLiked, SavedMovieId, deletMovie, handelChangeFilter, isLoading, isNotResult, deletSaveMovie}) {
+function Movies({
+  dataMovie,
+  searchMovie,
+  isSearchFilm,
+  Message,
+  savedMovie,
+  isLiked,
+  SavedMovieId,
+  deletMovie,
+  handelChangeFilter,
+  isLoading,
+  isNotResult,
+  deletSaveMovie,
+  ChangeFilterOut,
+  setSlider,
+  isSlider,
+}) {
 
   const [MoviesOnDisplay, setMoviesOnDisplay] = React.useState(() => {
 
@@ -54,10 +70,10 @@ function Movies({dataMovie, searchMovie, isSearchFilm, Message, savedMovie, isLi
 
   return (
     <section className='movies__containers'>
-      <SearchForm dataMovie={dataMovie} searchMovie={searchMovie} ChangeFilter={handelChangeFilter} />
+      <SearchForm isSlider={isSlider} setSlider={setSlider} ChangeFilterOut={ChangeFilterOut} dataMovie={dataMovie} searchMovie={searchMovie} ChangeFilter={handelChangeFilter} />
       <MoviesCardList deletSaveMovie={deletSaveMovie} isNotResult={isNotResult} isLoading={isLoading} deletMovie={deletMovie} SavedMovieId={SavedMovieId} isLiked={isLiked} savedMovie={savedMovie} Message={Message} dataMovie={MovieBase} isSearchFilm={isSearchFilm}/>
       {isNotResult ?
-        <button onClick={handelMoreMovies} className={MovieBase.length === dataMovie.length ? 'movies__more-dis' : 'movies__more'}>Еще</button>
+        <button id='more' onClick={handelMoreMovies} className={MovieBase.length === dataMovie.length ? 'movies__more-dis' : 'movies__more'}>Еще</button>
          :
         ''
       }

@@ -8,7 +8,7 @@ import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import Movies from '../Movies/Movies';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Profile from '../Profile/Profile';
 import EditProfile from '../EditProfile/EditProfile';
 import SearchForm from '../SearchForm/SearchForm';
@@ -39,6 +39,7 @@ function App() {
   const [isAuthError, setAuthError] = React.useState('');
   const [isRenderFilm, setRenderFilm] = React.useState([]);
   const [isSerchSaveFilm,  setSerchSaveFilm] = React.useState(false);
+  const [isSlider, setSlider] = React.useState(false)
 
   React.useEffect(() => {
     handelCheckToken();
@@ -112,6 +113,21 @@ function App() {
     handelLikeButton(isSavedMovie, currentMovie)
   }, [ ])
 
+  React.useEffect(() => {
+    const checkbox = localStorage.getItem('checkbox');
+    if (checkbox === "true") {
+      setSlider(true)
+    } else {
+      setSlider(false)
+    }
+  }, [])
+
+
+  React.useEffect(() => {
+    localStorage.setItem('checkbox', JSON.stringify(isSlider));
+  }, [isSlider])
+
+
   function handelCheckToken() {
     const token = localStorage.getItem('token')
 
@@ -134,6 +150,9 @@ function App() {
     localStorage.removeItem('token');
     localStorage.removeItem('movie');
     localStorage.removeItem('movieSaved');
+    localStorage.removeItem('query');
+    localStorage.removeItem('checkbox');
+    setFilterMoviesData([])
     setLogin(false)
     history.push('/')
   }
@@ -144,7 +163,8 @@ function App() {
       email: email,
       password: password
     }).then(() => {
-      history.push('/signin')
+      // history.push('/signin')
+      handelAutorize(email, password);
     })
     .catch((err) => {
       if (err === 409) {
@@ -269,8 +289,14 @@ function App() {
   // ------------------------------------------------------
 
   function ChangeFilter() {
-      setShortFilm(true);
-      console.log(isShortFilm);
+    setShortFilm(true);
+    console.log(isShortFilm);
+
+  }
+
+  function ChangeFilterOut() {
+    setShortFilm(false);
+    localStorage.setItem('movie', JSON.stringify(isFilterMoviesData));
   }
 
   // описываем логику лайка/сохранение фильма
@@ -348,6 +374,12 @@ function App() {
     })
   }
 
+  function filterFilm (item) {
+    let mov = filterDuration(item)
+    localStorage.setItem('movie', JSON.stringify(mov));
+    return mov
+  }
+
   return (
     <div className="page__container">
 
@@ -377,14 +409,17 @@ function App() {
                   SavedMovieId ={SavedMovieId}
                   isLiked = {isLiked}
                   isSearchFilm = {isSearchFilm}
-                  dataMovie = {isShortFilm ? filterDuration(isFilterMoviesData) : isFilterMoviesData}
+                  dataMovie = {isShortFilm ? filterFilm(isFilterMoviesData) : isFilterMoviesData}
                   searchMovie = {searchMovie}
                   Message = {isMassageSearch}
                   ChangeFilter = {ChangeFilter}
+                  ChangeFilterOut = {ChangeFilterOut}
                   savedMovie={handelSavedMovie}
                   deletMovie = {deletMovie}
                   handelChangeFilter = {handelChangeFilter}
                   deletSaveMovie = {isSavedMovie}
+                  isSlider = {isSlider}
+                  setSlider = {setSlider}
                 />
                 <Footer/>
               </Route>
@@ -400,6 +435,7 @@ function App() {
                  />
                 <SearchForm
                   ChangeFilter = {handelChangeFilter}
+                  ChangeFilterOut = {ChangeFilterOut}
                   searchSavedMovie = {searchSavedMovie}
                 />
                 <MoviesCardList
@@ -408,6 +444,7 @@ function App() {
                   isSearchFilm = {isSearchFilm}
                   dataMovie={isSerchSaveFilm ? isRenderFilm : isShortFilm ? filterDuration(isSavedMovie) : isSavedMovie}
                   deletMovie = {deletMovie}
+                  Message = {isMassageSearch}
                 />
                 <Footer/>
               </Route>

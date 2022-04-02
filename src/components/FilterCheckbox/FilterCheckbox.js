@@ -1,11 +1,20 @@
 import './FilterCheckbox.css'
 import React from 'react';
 
-function FilterCheckbox({ChangeFilter}) {
+function FilterCheckbox({ChangeFilter, ChangeFilterOut, isSlider, setSlider}) {
+
 
   function handleOnChange(e) {
-    ChangeFilter(e.target.checked)
+    if (!isSlider) {
+      ChangeFilter(e.target.checked)
+      setSlider(true);
+    } else if (isSlider) {
+      ChangeFilterOut(e.target.checked);
+      setSlider(false);
+    }
   }
+
+
 
   return (
     <div className='checkbox'>
@@ -14,6 +23,7 @@ function FilterCheckbox({ChangeFilter}) {
           type='checkbox'
           name='check'
           onChange={handleOnChange}
+          checked={isSlider}
         />
         <span className='checkbox__slider round'></span>
       </label>
