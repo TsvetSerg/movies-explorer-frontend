@@ -3,6 +3,7 @@ import logo from '../../images/logo.svg';
 import { Link, withRouter } from 'react-router-dom';
 import React from 'react';
 import { useFormValidation } from '../../utils/useFormValidation';
+import { EMAIL_PATTERN } from '../../utils/constants';
 
 function Register({handelRegistr, authError, setAuthError}) {
 
@@ -34,7 +35,7 @@ function Register({handelRegistr, authError, setAuthError}) {
         <input className='auth__input' type="text" id="name" name="name" value={values.name || ''} onChange={handleChangeInput} required minLength='2' />
         <span className='auth__error_email'>{errors.name}</span>
         <p className='auth__input-title'>E-mail</p>
-        <input className='auth__input' type="text" id="email" name="email" value={values.email || ''} onChange={handleChangeInput} required minLength='6' />
+        <input className='auth__input' type="text" id="email" pattern={EMAIL_PATTERN} name="email" value={values.email || ''} onChange={handleChangeInput} required minLength='6' />
         <span className='auth__error_email'>{errors.email}</span>
         <p className='auth__input-title'>Пароль</p>
         <input className='auth__input' type="password" id="password" name="password" value={values.password || ''} onChange={handleChangeInput} required minLength='6' />

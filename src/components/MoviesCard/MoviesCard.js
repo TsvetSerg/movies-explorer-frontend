@@ -13,6 +13,8 @@ function MoviesCard({movie, savedMovie, deletMovie, isLikeFilm, SavedMovieId, is
 
   const classNameMovieee = classNameMov()
 
+  const delbtn = pathname === '/saved-movies'
+
   function classNameMov() {
     if (pathname === '/saved-movies') {
       classNameMovie = !isLike ? 'movie-dis' : 'movie';
@@ -41,7 +43,7 @@ function MoviesCard({movie, savedMovie, deletMovie, isLikeFilm, SavedMovieId, is
       <a rel="noreferrer" className='movie__link' target="_blank" href={movie.trailerLink}><img className='movie__picture' src={isLikeFilm ? movie.image : `https://api.nomoreparties.co${movie.image.url}`} alt={movie.nameRU} /></a>
       <div className='movie__wrapper'>
         <h1 className='movie__title'>{movie.nameRU}</h1>
-        <button className={cardLikeButtonClassName} onClick={handelSaveMovie} ></button>
+        <button className={delbtn ? 'movie__del-btn' : cardLikeButtonClassName} onClick={handelSaveMovie} ></button>
       </div>
       <p className='movie__time'>{movie.duration}М</p>
     </div>

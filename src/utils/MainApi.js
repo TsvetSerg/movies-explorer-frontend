@@ -61,6 +61,7 @@ class MainApi {
         nameEN: movieCard.nameEN,
       })
     })
+    .then(this._check)
   }
 
   //Удаляем сохраненный фильм

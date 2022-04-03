@@ -74,7 +74,7 @@
   background-position: center center;
 }
 
-.movie__like-btn_activ:hover {
+.movie__del-btn {
   margin: 0;
   padding: 0;
   width: 24px;
@@ -86,6 +86,9 @@
   background-image: url(../../images/del-lie.svg);
   background-repeat: no-repeat;
   background-position: center center;
+  transition: transform .4s;
+}
+.movie__del-btn:hover {
   transform: scale(1.3);
 }
 

@@ -6,7 +6,6 @@ import CloseBtn from '../../images/icon-close-btn.svg'
 function Navigation({isLogin}) {
 
   const [isBurgerMenu, setBurgerMenu] = React.useState(false);
-
   function closeBurgerMenu() {
     setBurgerMenu(false)
   }

@@ -8,7 +8,7 @@ import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import Movies from '../Movies/Movies';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import Profile from '../Profile/Profile';
 import EditProfile from '../EditProfile/EditProfile';
 import SearchForm from '../SearchForm/SearchForm';
@@ -38,9 +38,10 @@ function App() {
   const [isNotResult, setNotResult] = React.useState(true);
   const [isAuthError, setAuthError] = React.useState('');
   const [isRenderFilm, setRenderFilm] = React.useState([]);
-  const [isSerchSaveFilm,  setSerchSaveFilm] = React.useState(false);
-  const [isSlider, setSlider] = React.useState(false)
+  const [isSerchSaveFilm,  setSerchSaveFilm] = React.useState(true);
+  const [isSlider, setSlider] = React.useState(false);
   const [isMyFilm, setMyFilm] = React.useState([]);
+  const [isSerchUp, setserchUp] = React.useState(false);
 
   React.useEffect(() => {
     handelCheckToken();
@@ -62,19 +63,33 @@ function App() {
     if(tokenMovie && tokenMovie.length === 0) {
       setLocal(false);
       setLoading(false);
-      setNotResult(false);
     } else if (tokenMovie) {
       setFilterMoviesData(tokenMovie)
-      // setNotResult(true)
       setSearchFilm(false);
       setLocal(false);
       setLoading(false);
     } else {
-      setNotResult(false);
       setLocal(false);
       setLoading(false);
     }
   }, [isLocal])
+
+  React.useEffect(() => {
+    const movie = filterMyFilm(isSavedMovie);
+    localStorage.setItem('isMylikeFilm', JSON.stringify(movie));
+    const myMovie = JSON.parse(localStorage.getItem('isMylikeFilm'));
+    if (myMovie) {
+      setMyFilm(myMovie)
+    }
+  }, [isSavedMovie])
+
+  function filterMyFilm(data) {
+    let movieBase = data.filter((item) => {
+      return item.owner === currentUser._id
+    });
+    return movieBase
+  }
+
 
 
   React.useEffect(() => {
@@ -84,21 +99,24 @@ function App() {
       setCreateMovie(false);
     })
     .catch((err) => {
+
       setSearchFilm(true);
-      setNotResult(false);
       setMassageSearch('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.');
     })
-  }, [isCreateMovie]);
+  }, [isCreateMovie, isSerchUp]);
 
   function getlikedMovie() {
     Promise.all([movieApi.getAllLikeMovie()])
     .then(([data]) => {
       setSavedMovie(data);
+      const movie = filterMyFilm(data);
+      localStorage.setItem('isMylikeFilm', JSON.stringify(movie));
     })
     .catch((err) => {
       console.log(err);
     })
   }
+
 
   function getBestFilm() {
     MoviesApi.getBestFilm()
@@ -152,6 +170,7 @@ function App() {
     localStorage.removeItem('movieSaved');
     localStorage.removeItem('query');
     localStorage.removeItem('checkbox');
+    localStorage.removeItem('isMylikeFilm');
     setFilterMoviesData([])
     setLogin(false)
     history.push('/')
@@ -163,7 +182,6 @@ function App() {
       email: email,
       password: password
     }).then(() => {
-      // history.push('/signin')
       handelAutorize(email, password);
     })
     .catch((err) => {
@@ -227,11 +245,14 @@ function App() {
         return regex.test(item.nameRU) || regex.test(item.nameEN)
       })
       if(movieBase.length === 0) {
-        setSearchFilm(true);
-        setNotResult(false);
         setMassageSearch('Ничего не найдено, попробуйте ввести другой запрос.');
+        setSearchFilm(true);
+        setSerchSaveFilm(true)
+        // setSavedMovie([]);
       } else {
         setMassageSearch('')
+        setSearchFilm(false);
+        setSerchSaveFilm(false);
       }
       return movieBase;
     }
@@ -239,8 +260,9 @@ function App() {
   }
 
   function searchMovie(request) {
+    setSearchFilm(true);
     setLoading(true);
-    setNotResult(true);
+    setMassageSearch('')
     setTimeout(() => {
       setRequest(request)
       const result = filter(currentMovie, request);
@@ -252,36 +274,49 @@ function App() {
   }
 
   function searchSavedMovie(request) {
-    setLoading(true);
-    setNotResult(true);
+    // setLoading(true);
+    // setSerchSaveFilm(true);
+    // setMassageSearch('')
+    // setTimeout(() => {
+    //   setRequest(request)
+    //   const result = filter(isSavedMovie, request);
+    //   if (result !== 0) {
+    //     localStorage.setItem('movieSaved', JSON.stringify(result));
+    //     setLocal(true);
+    //     setLoading(false);
+    //   }
+    // }, 500)
+    // localStorage.removeItem('movieSaved');
+    // setRenderFilm([]);
     setSerchSaveFilm(true);
+    setLoading(true);
+    setMassageSearch('')
     setTimeout(() => {
       setRequest(request)
-      const result = filter(isSavedMovie, request);
+      const result = filter(isMyFilm, request);
       localStorage.setItem('movieSaved', JSON.stringify(result));
       setLocal(true);
 
     }, 500)
-    localStorage.removeItem('movieSaved');
-    setRenderFilm([]);
 
   }
 
   React.useEffect(() => {
     const savedMovie = JSON.parse(localStorage.getItem('movieSaved'));
     if(savedMovie && savedMovie.length === 0) {
+      setMassageSearch('Ничего не найдено.')
       setLocal(false);
       setLoading(false);
-      setSerchSaveFilm(false)
+      setLocal(false);
+
     } else if (savedMovie) {
-      setRenderFilm(savedMovie)
-      setSearchFilm(false);
+      setMyFilm(savedMovie)
+      setSerchSaveFilm(false);
       setLocal(false);
       setLoading(false);
     } else {
       setLocal(false);
       setLoading(false);
-      setSerchSaveFilm(false)
     }
   }, [isLocal])
 
@@ -307,7 +342,7 @@ function App() {
 
 
   function addMovie(movie) {
-    const baseUrl = 'https://api.nomoreparties.co'
+    const baseUrl = 'https://api.nomoreparties.co';
     movieApi.savedMovie({
       country: movie.country ? movie.country : 'Not Country',
       director: movie.director ? movie.director : 'Not director',
@@ -315,7 +350,7 @@ function App() {
       year: movie.year ? movie.year : '0000',
       description: movie.description ? movie.description : 'Not description',
       image: movie.image ? baseUrl + movie.image.url : 'No Image',
-      trailerLink: movie.trailerLink ? movie.trailerLink : 'trailerLink',
+      trailerLink: movie.trailerLink ? movie.trailerLink : 'https://www.youtube.com/',
       movieId: movie.id,
       nameRU: movie.nameRU ? movie.nameRU : 'Not nameRU',
       nameEN: movie.nameEN ? movie.nameEN : 'Not nameEN',
@@ -329,6 +364,8 @@ function App() {
     .catch((err) => {
       console.log(err);
     })
+
+
   }
 
   function deletMovie(id) {
@@ -353,7 +390,7 @@ function App() {
   }
 
   function SavedMovieId(movie) {
-    return isSavedMovie.some((item) => item.movieId === movie.id)
+    return isMyFilm.some((item) => item.movieId === movie.id)
   }
 
   function SavedFilmId(movie) {
@@ -402,11 +439,11 @@ function App() {
                 <Header
                   name = {currentUser}
                   isLogin={isLogin}
+                  setLocal={setLocal}
                  />
                 <Movies
-                  isNotResult = {isNotResult}
                   isLoading = {isLoading}
-                  SavedMovieId ={SavedFilmId}
+                  SavedMovieId ={SavedMovieId}
                   isLiked = {isLiked}
                   isSearchFilm = {isSearchFilm}
                   dataMovie = {isShortFilm ? filterFilm(isFilterMoviesData) : isFilterMoviesData}
@@ -432,19 +469,24 @@ function App() {
               <Route>
                 <Header
                  isLogin={isLogin}
+                 setLocal={setLocal}
+                 setMassageSearch={setMassageSearch}
                  />
                 <SearchForm
                   ChangeFilter = {handelChangeFilter}
                   ChangeFilterOut = {ChangeFilterOut}
                   searchSavedMovie = {searchSavedMovie}
+                  isSlider = {isSlider}
+                  setSlider = {setSlider}
                 />
                 <MoviesCardList
                   SavedMovieId ={SavedFilmId}
                   isLikeFilm = {isLikeFilm}
                   isSearchFilm = {isSearchFilm}
-                  dataMovie={isSerchSaveFilm ? isRenderFilm : isShortFilm ? filterDuration(isSavedMovie) : isSavedMovie}
+                  dataMovie={isShortFilm ? filterDuration(isMyFilm) : isMyFilm}
                   deletMovie = {deletMovie}
                   Message = {isMassageSearch}
+                  // isSerchSaveFilm ? isRenderFilm :
                 />
                 <Footer/>
               </Route>

@@ -4,6 +4,7 @@ import logo from '../../images/logo.svg';
 import { Link, withRouter } from 'react-router-dom';
 import { useFormValidation } from '../../utils/useFormValidation';
 import CurrentUserContext from '../../contexts/CurrentUserContext';
+import { EMAIL_PATTERN } from '../../utils/constants';
 
 function EditProfile({handelUpdate, authError, setAuthError}) {
 
@@ -33,7 +34,7 @@ function EditProfile({handelUpdate, authError, setAuthError}) {
       <input className='auth__input' value={values.name || currentUser.name} onChange={hendelInput} type="text" id="name" name="name" minLength='2' required />
       <span className='auth__error_email'>{errors.name}</span>
       <p className='auth__input-title'>E-mail</p>
-      <input className='auth__input' value={values.email || currentUser.email} onChange={hendelInput}  type="text" id="email" name="email"  minLength='6' required />
+      <input className='auth__input' value={values.email || currentUser.email} pattern={EMAIL_PATTERN} onChange={hendelInput}  type="text" id="email" name="email"  minLength='6' required />
       <span className='auth__error_password'>{errors.email}</span>
       <button className={isValid ? 'auth__button' : 'auth__button-disable'} type='sumbit' disabled={!isValid} >Сохранить</button>
     </form>
