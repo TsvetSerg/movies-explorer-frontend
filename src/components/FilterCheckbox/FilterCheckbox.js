@@ -15,7 +15,6 @@ function FilterCheckbox({ChangeFilter, ChangeFilterOut, isSlider, setSlider}) {
   }
 
 
-
   return (
     <div className='checkbox'>
       <label className='checkbox__lable'>

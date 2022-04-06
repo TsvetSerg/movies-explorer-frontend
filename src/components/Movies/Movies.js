@@ -72,7 +72,7 @@ function Movies({
     <section className='movies__containers'>
       <SearchForm isSlider={isSlider} setSlider={setSlider} ChangeFilterOut={ChangeFilterOut} dataMovie={dataMovie} searchMovie={searchMovie} ChangeFilter={handelChangeFilter} />
       <MoviesCardList deletSaveMovie={deletSaveMovie} isNotResult={isNotResult} isLoading={isLoading} deletMovie={deletMovie} SavedMovieId={SavedMovieId} isLiked={isLiked} savedMovie={savedMovie} Message={Message} dataMovie={MovieBase} isSearchFilm={isSearchFilm}/>
-      {isNotResult ?
+      {!isNotResult ?
         <button id='more' onClick={handelMoreMovies} className={MovieBase.length === dataMovie.length ? 'movies__more-dis' : 'movies__more'}>Еще</button>
          :
         ''

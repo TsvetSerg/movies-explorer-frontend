@@ -14,6 +14,12 @@ function Navigation({isLogin}) {
     setBurgerMenu(true);
   }
 
+
+  function handelSerch() {
+    localStorage.setItem('movieSaved', JSON.stringify([]));
+  }
+
+
   return (
     <nav className='nav'>
       <ul className='nav__list'>
@@ -21,7 +27,7 @@ function Navigation({isLogin}) {
         {isLogin ?
           <>
           <div className='navigate-wrapper'>
-            <li className='nav__item-log'><Link className='nav__link' to="/movies">Фильмы</Link></li>
+            <li className='nav__item-log'><Link onClick={handelSerch} className='nav__link' to="/movies">Фильмы</Link></li>
             <li className='nav__item-log'><Link className='nav__link' to="/saved-movies">Сохранённые фильмы</Link></li>
             <li className='nav__item-log'><Link className='nav__link' to="/profile">Аккаунт</Link></li>
             <li className='nav__item-log'><button className='nav__button-log'></button></li>

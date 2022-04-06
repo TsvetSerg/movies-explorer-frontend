@@ -8,7 +8,7 @@ import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import Movies from '../Movies/Movies';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Profile from '../Profile/Profile';
 import EditProfile from '../EditProfile/EditProfile';
 import SearchForm from '../SearchForm/SearchForm';
@@ -20,6 +20,7 @@ import * as MoviesApi from '../../utils/MoviesApi';
 
 function App() {
 
+  const { pathname } = useLocation();
   const history = useHistory();
   const [isLogin, setLogin] = React.useState(false)
   const [currentUser, setCurrentUser] = React.useState({});
@@ -37,11 +38,13 @@ function App() {
   const [isLoading, setLoading] = React.useState(false);
   const [isNotResult, setNotResult] = React.useState(true);
   const [isAuthError, setAuthError] = React.useState('');
-  const [isRenderFilm, setRenderFilm] = React.useState([]);
+  // const [isRenderFilm, setRenderFilm] = React.useState([]);
   const [isSerchSaveFilm,  setSerchSaveFilm] = React.useState(true);
   const [isSlider, setSlider] = React.useState(false);
   const [isMyFilm, setMyFilm] = React.useState([]);
   const [isSerchUp, setserchUp] = React.useState(false);
+  const [successfully, setSuccessfully] = React.useState(false);
+  const [isUpFilm, setUpFilm] = React.useState(false);
 
   React.useEffect(() => {
     handelCheckToken();
@@ -79,9 +82,9 @@ function App() {
     localStorage.setItem('isMylikeFilm', JSON.stringify(movie));
     const myMovie = JSON.parse(localStorage.getItem('isMylikeFilm'));
     if (myMovie) {
-      setMyFilm(myMovie)
+      setMyFilm(myMovie);
     }
-  }, [isSavedMovie])
+  }, [isSavedMovie, pathname])
 
   function filterMyFilm(data) {
     let movieBase = data.filter((item) => {
@@ -225,8 +228,8 @@ function App() {
       email: email
     })
     .then((data) => {
-      history.push('/profile');
       setCurrentUser(data);
+      setSuccessfully(true);
     })
     .catch(() => {
       setAuthError('Что то пошло не так. Возможно данный E-mail занят или вы ввели не подходящие данные.');
@@ -247,12 +250,16 @@ function App() {
       if(movieBase.length === 0) {
         setMassageSearch('Ничего не найдено, попробуйте ввести другой запрос.');
         setSearchFilm(true);
+        setNotResult(false);
         setSerchSaveFilm(true)
         // setSavedMovie([]);
       } else {
         setMassageSearch('')
         setSearchFilm(false);
         setSerchSaveFilm(false);
+        setNotResult(true);
+
+        setLocal(true);
       }
       return movieBase;
     }
@@ -274,20 +281,7 @@ function App() {
   }
 
   function searchSavedMovie(request) {
-    // setLoading(true);
-    // setSerchSaveFilm(true);
-    // setMassageSearch('')
-    // setTimeout(() => {
-    //   setRequest(request)
-    //   const result = filter(isSavedMovie, request);
-    //   if (result !== 0) {
-    //     localStorage.setItem('movieSaved', JSON.stringify(result));
-    //     setLocal(true);
-    //     setLoading(false);
-    //   }
-    // }, 500)
-    // localStorage.removeItem('movieSaved');
-    // setRenderFilm([]);
+    // setUpFilm(true);
     setSerchSaveFilm(true);
     setLoading(true);
     setMassageSearch('')
@@ -295,7 +289,9 @@ function App() {
       setRequest(request)
       const result = filter(isMyFilm, request);
       localStorage.setItem('movieSaved', JSON.stringify(result));
-      setLocal(true);
+      // setMyFilm(result);
+      // setLocal(true);
+
 
     }, 500)
 
@@ -484,6 +480,11 @@ function App() {
                   isLikeFilm = {isLikeFilm}
                   isSearchFilm = {isSearchFilm}
                   dataMovie={isShortFilm ? filterDuration(isMyFilm) : isMyFilm}
+                  // dataMovie = {
+                  //   if(isSerchSaveFilm) {
+                  //     isShortFilm ? filterDuration(isMyFilm) : isMyFilm
+                  //   }
+                  // }
                   deletMovie = {deletMovie}
                   Message = {isMassageSearch}
                   // isSerchSaveFilm ? isRenderFilm :
@@ -512,6 +513,8 @@ function App() {
             Component = {(
               <Route>
                 <EditProfile
+                  setSuccessfully = {setSuccessfully}
+                  successfully = {successfully}
                   handelUpdate = {handelUpdateProfile}
                   authError = {isAuthError}
                   setAuthError = {setAuthError}

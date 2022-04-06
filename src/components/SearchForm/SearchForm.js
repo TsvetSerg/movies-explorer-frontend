@@ -25,13 +25,15 @@ function SearchForm({searchMovie, ChangeFilter, searchSavedMovie, ChangeFilterOu
     } else if (pathname === '/saved-movies') {
       searchSavedMovie(isText);
       setText(isText);
-      localStorage.setItem('query', JSON.stringify(isText));
     }
   }
 
   React.useEffect(() => {
-    setText(JSON.parse(localStorage.getItem('query')))
-  }, [])
+    if (pathname === '/movies') {
+      setText(JSON.parse(localStorage.getItem('query')))
+    }
+
+  }, [pathname])
 
   return (
     <section className='searchForm'>
