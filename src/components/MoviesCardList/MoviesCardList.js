@@ -2,19 +2,45 @@ import React from 'react';
 import './MoviesCardList.css'
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
+import { useLocation } from 'react-router-dom';
 
 
-function MoviesCardList({dataMovie}) {
+function MoviesCardList({dataMovie, isSearchFilm, Message, savedMovie, isLikeFilm, isLiked, SavedMovieId, deletMovie, isLoading, isNotResult, deletSaveMovie}) {
 
-  const [loading, setLoading] = React.useState(false)
+  const classNameMovieList = isSearchFilm || isLoading ? 'movies-list_not-list' : 'movies-list';
+  // const pathname = useLocation();
+  // const [isNoMovie, setNoMovie] = React.useState(false);
+
 
   return (
-    <section className='movies-list'>
-      {loading ? <Preloader/> : ""}
+    <section className={classNameMovieList}>
+      {isLoading ? <Preloader/> : ""}
 
-      {dataMovie.map((movie) => {
-        return (<MoviesCard key={movie.id} movie={movie}/>)
-      })}
+      {isSearchFilm ?
+       <h1 className='movies-list__message'>{Message}</h1>
+      : dataMovie.map((movie) => {
+        return (<MoviesCard
+          deletMovie={deletMovie}
+          SavedMovieId={SavedMovieId}
+          isLiked={isLiked}
+          isLikeFilm={isLikeFilm}
+          savedMovie={savedMovie}
+          isSearchFilm={isSearchFilm}
+          key={isLikeFilm ? movie._id : movie.id}
+          movie={movie}
+          isLoading={isLoading}
+          deletSaveMovie={deletSaveMovie}
+          />)
+      })
+      }
+      {/* {isNotResult ?
+        '' :
+        <h1 className='movies-list__message'>{Message}</h1>
+      } */}
+
+      {/* {isNoMovie ? <h1 className='movies-list__message'>Ничего не найдено1111</h1> : ''} */}
+
+
     </section>
   )
 }

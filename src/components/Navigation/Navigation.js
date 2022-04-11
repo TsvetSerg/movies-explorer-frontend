@@ -6,7 +6,6 @@ import CloseBtn from '../../images/icon-close-btn.svg'
 function Navigation({isLogin}) {
 
   const [isBurgerMenu, setBurgerMenu] = React.useState(false);
-
   function closeBurgerMenu() {
     setBurgerMenu(false)
   }
@@ -15,6 +14,12 @@ function Navigation({isLogin}) {
     setBurgerMenu(true);
   }
 
+
+  function handelSerch() {
+    localStorage.setItem('movieSaved', JSON.stringify([]));
+  }
+
+
   return (
     <nav className='nav'>
       <ul className='nav__list'>
@@ -22,7 +27,7 @@ function Navigation({isLogin}) {
         {isLogin ?
           <>
           <div className='navigate-wrapper'>
-            <li className='nav__item-log'><Link className='nav__link' to="/movies">Фильмы</Link></li>
+            <li className='nav__item-log'><Link onClick={handelSerch} className='nav__link' to="/movies">Фильмы</Link></li>
             <li className='nav__item-log'><Link className='nav__link' to="/saved-movies">Сохранённые фильмы</Link></li>
             <li className='nav__item-log'><Link className='nav__link' to="/profile">Аккаунт</Link></li>
             <li className='nav__item-log'><button className='nav__button-log'></button></li>
@@ -41,10 +46,10 @@ function Navigation({isLogin}) {
           <div className='burger'>
             <img onClick={closeBurgerMenu} className='burger__close-btn' src={CloseBtn} alt="Закрыть" />
             <ul className='burger__list'>
-              <li className='burger__item'><Link className='burger__link' to="/">Главная</Link></li>
-              <li className='burger__item'><Link className='burger__link' to="/movies">Фильмы</Link></li>
-              <li className='burger__item'><Link className='burger__link' to="/saved-movies">Сохранённые фильмы</Link></li>
-              <li className='burger__item'><Link className='burger__link' to="/profile">Аккаунт</Link><button className='nav__button-log'></button></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/">Главная</Link></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/movies">Фильмы</Link></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/saved-movies">Сохранённые фильмы</Link></li>
+              <li className='burger__item' onClick={closeBurgerMenu}><Link className='burger__link' to="/profile">Аккаунт</Link><button className='nav__button-log'></button></li>
             </ul>
           </div>
           : ""}
