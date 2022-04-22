@@ -1,17 +1,28 @@
-# Getting Started with Create React App
+# Movies Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Сервис поиска фильмов и сохранения фильмов.
+Реализована регистрация и авторизация, запросы к сторонним Api и своему backend.
+Написанн данный проект на ReactJs 
 
-## Available Scripts
+## Инструкция по запуску проекта.
 
-In the project directory, you can run:
+1. Склонировать репрезиторий.
 
-### `npm start`
+2. Установить npm зависимости 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```sh
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+3. Локально запустить проект 
 
-bestmovie.students.nomoredomains.work
+```sh
+npm run start
+```
+
+## Статус и планы по доработке проекта
+
+В будущем планирую подключить к проекту Api Кинопоиска, расширить возможности поиска и сортировки не только по Короткометражкам но и по другим критериям фильмов.
+
+
+PS Задеплоенная версия может быть достапна тут => bestmovie.students.nomoredomains.work
